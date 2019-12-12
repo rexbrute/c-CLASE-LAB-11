@@ -1,0 +1,165 @@
+#include <math.h>
+#include <string.h>
+#include <stdlib.h>
+#include <iostream>
+#define PI 3.14159
+
+using namespace std;
+class figura
+{
+protected:
+char nume[20]; // denumirea figurii
+public: // functii pur virtuale
+virtual float arie() = 0;
+virtual float perimetru() = 0;
+char* getnume()
+{
+return nume;
+
+}
+};
+
+class Poligon:public figura{
+
+};
+class triunghi:public Poligon{
+protected:
+float x1, y1, x2, y2;
+public:
+dreptunghi(float X1,float Y1,float X2,float Y2):
+patrulater(X1,Y1,X2,Y1,X2,Y2,X1,Y2)
+{
+strcpy(nume,"Dreptunghi");
+x1=X1;
+y1=Y1;
+x2=X2;
+y2=Y2;
+}
+virtual float arie()
+{
+return fabs((x2-x1)*(y2-y1));
+}
+virtual float perimetru()
+{
+return 2*(fabs(x2-x1)+fabs(y2-y1));
+}
+};
+class patrulater:public Poligon
+{
+protected:
+float x1,y1,x2,y2,x3,y3,x4,y4;
+public:
+patrulater(float X1,float Y1,float X2,float Y2,
+float X3,float Y3,float X4,float Y4)
+{
+strcpy(nume,"Patrulater");
+x1=X1;
+y1=Y1;
+x2=X2;
+y2=Y2;
+x3=X3;
+y3=Y3;
+
+
+x4=X4;
+y4=Y4;
+}
+virtual float arie()
+{
+return fabs(x1*y2-x2*y1+x2*y3-x3*y2+x3*y4-x4*y3+x4*y1-x1*y4)/2;
+}
+virtual float perimetru()
+{
+return sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))+
+sqrt((x3-x2)*(x3-x2)+(y3-y2)*(y3-y2))+
+sqrt((x4-x3)*(x4-x3)+(y4-y3)*(y4-y3))+
+sqrt((x1-x4)*(x1-x4)+(y1-y4)*(y1-y4));
+
+}
+};
+class dreptunghi: virtual public patrulater // clasa patrulater virtuala
+{
+protected:
+float x1, y1, x2, y2;
+public:
+dreptunghi(float X1,float Y1,float X2,float Y2):
+patrulater(X1,Y1,X2,Y1,X2,Y2,X1,Y2)
+{
+strcpy(nume,"Dreptunghi");
+x1=X1;
+y1=Y1;
+x2=X2;
+y2=Y2;
+}
+virtual float arie()
+{
+return fabs((x2-x1)*(y2-y1));
+}
+virtual float perimetru()
+{
+return 2*(fabs(x2-x1)+fabs(y2-y1));
+}
+};
+class romb: virtual public patrulater // clasa patrulater virtuala
+{
+protected:
+float x, y, l, u;
+public:
+romb(float X,float Y,float L,float U):
+patrulater(X,Y,X+L,Y,X+L*cos(U)+L,Y+L*sin(U),X+L*cos(U),Y+L*sin(U))
+{
+strcpy(nume,"Romb");
+x=X;
+y=Y;
+l=L;
+
+
+
+u=U;
+}
+virtual float arie()
+{
+return l*l*sin(u);
+}
+virtual float perimetru()
+{
+return 4*l;
+}
+};
+class patrat: public dreptunghi, public romb
+{
+protected:
+float x, y, l;
+public:
+patrat(float X,float Y,float L):dreptunghi(X,Y,X+L,Y+L),
+romb(X,Y,L,PI/2),patrulater(X,Y,X+L,Y,X+L,Y+L,X,Y+L)
+{
+strcpy(nume,"Patrat");
+x=X;
+y=Y;
+l=L;
+}
+virtual float arie() // calcul arie patrat ca fiind dreptunghi
+{
+return dreptunghi::arie();
+}
+virtual float perimetru() // calcul perimetru patrat ca fiind romb
+{
+return romb::perimetru();
+}
+};
+int main(void)
+{
+patrulater P(10,10,100,40,110,100,20,30);
+dreptunghi d(10,20,200,80);
+romb r(20,50,100,PI/3);
+patrat p(20,10,100);
+cout<<"Aria patrulaterului: "<<P.arie()<<endl;
+cout<<"Perimetrul patrulaterului: "<<P.perimetru()<<endl<<endl;
+cout<<"Aria dreptunghiului: "<<d.arie()<<endl;
+cout<<"Perimetrul dreptunghiului: "<<d.perimetru()<<endl<<endl;
+cout<<"Aria rombului: "<<r.arie()<<endl;
+cout<<"Perimetrul rombului: "<<r.perimetru()<<endl<<endl;
+cout<<"Aria patratului: "<<p.arie()<<endl;
+cout<<"Perimetrul patratului: "<<p.perimetru()<<endl<<endl;
+}
